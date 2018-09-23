@@ -5,6 +5,8 @@ require_once dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'autolo
 // Config the desired paths
 \LE_ACME2\Account::setCommonKeyDirectoryPath('/etc/ssl/le-storage/');
 \LE_ACME2\Authorizer\HTTP::setDirectoryPath('/var/www/acme-challenges/');
+// Change the renew days
+\LE_ACME2\Order::setRenewBeforeDays(30);
 
 // General configs
 \LE_ACME2\Connector\Connector::getInstance()->useStagingServer(true);
@@ -44,7 +46,13 @@ if ($order->authorize(\LE_ACME2\Order::CHALLENGE_TYPE_HTTP)) {
 
 if ($order->isCertificateBundleAvailable()) {
     $bundle = $order->getCertificateBundle();
-    $order->enableAutoRenewal();
+    // Get order certificate helper.
+    // Additional helpers in LE_ACME2\Struct\CertificateBundle
+    // Default returns order path, private, cert and intermediate relative paths and expire timestamp
+    var_dump($bundle);
+
+    // renew order
+    // $order->enableAutoRenewal();
 
     // Revoke certificate
     // $order->revokeCertificate($reason = 0);
